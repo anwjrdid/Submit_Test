@@ -1,29 +1,10 @@
-// 필요한 HTML 요소들 가져오기
+// --- 1. 요소 가져오기 ---
 const helpBtn = document.getElementById('help-btn');
 const closeModalBtn = document.getElementById('close-modal');
 const helpModal = document.getElementById('help-modal');
 const submitBtn = document.getElementById('submit-btn');
 const univInput = document.getElementById('univ-input');
 const nameInput = document.getElementById('name-input');
-
-// 1. 물음표 버튼 누르면 모달창 열기
-helpBtn.addEventListener('click', () => {
-    helpModal.classList.remove('hidden');
-});
-
-// 2. X 버튼 누르면 모달창 닫기
-closeModalBtn.addEventListener('click', () => {
-    helpModal.classList.add('hidden');
-});
-
-// 3. 모달창 바깥(검은 배경) 누르면 닫기
-window.addEventListener('click', (e) => {
-    if (e.target === helpModal) {
-        helpModal.classList.add('hidden');
-    }
-});
-
-// 추가로 필요한 HTML 요소들 가져오기
 const mainContainer = document.querySelector('.container');
 const warningScreen = document.getElementById('warning-screen');
 const gameScreen = document.getElementById('game-screen');
@@ -31,145 +12,238 @@ const robotCheckbox = document.getElementById('im-not-robot');
 const displayUniv = document.getElementById('display-univ');
 const displayName = document.getElementById('display-name');
 const timeLeftDisplay = document.getElementById('time-left');
+const retryBtn = document.getElementById('retry-btn');
+const hammerImg = document.getElementById('hammer-effect');
 
-// 타이머 변수
+// --- 2. 초기 세팅 (3분) ---
 let timerInterval;
-let timeLeft = 300; // 5분 = 300초
+const TOTAL_TIME = 180; 
+let timeLeft = TOTAL_TIME;
 
-// 4. '최종 제출하시겠습니까?' 버튼 클릭 (함정 발동!)
-submitBtn.addEventListener('click', () => {
-    const univ = univInput.value.trim();
-    const name = nameInput.value.trim();
+// 모달 제어
+helpBtn.onclick = () => helpModal.classList.remove('hidden');
+closeModalBtn.onclick = () => helpModal.classList.add('hidden');
 
-    // 입력값 검사
-    if (!univ || !name) {
-        alert("학교와 이름을 정확히 입력하십시오 휴먼.");
+// 제출 버튼 -> 경고창
+submitBtn.onclick = () => {
+    if (!univInput.value.trim() || !nameInput.value.trim()) {
+        alert("학교와 이름을 입력하십시오 휴먼.");
         return;
     }
-
-    // 데이터 세팅 (다음 화면 상단에 띄울 정보)
-    displayUniv.innerText = univ;
-    displayName.innerText = name;
-
-    // 메인 시험지 화면 숨기고 경고창 띄우기
+    displayUniv.innerText = univInput.value;
+    displayName.innerText = nameInput.value;
     mainContainer.classList.add('hidden');
     warningScreen.classList.remove('hidden');
-});
+};
 
-// [수정할 부분] 5. '로봇이 아닙니다' 체크박스 클릭
-robotCheckbox.addEventListener('change', () => {
+// 로봇 인증 -> 게임 시작
+robotCheckbox.onchange = () => {
     if (robotCheckbox.checked) {
         setTimeout(() => {
             warningScreen.classList.add('hidden');
             gameScreen.classList.remove('hidden');
             startTimer();
-            
-            // 1단계 게임 시작 호출!
-            initGame1(); 
+            initGame1();
         }, 800);
     }
-});
+};
 
-// 6. 5분 카운트다운 타이머 함수
+// 타이머 함수
 function startTimer() {
-    // 1초마다 실행
     timerInterval = setInterval(() => {
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            timeLeftDisplay.innerText = "00:00";
-            // TODO: 나중에 이 부분에 "미쳤습니까 휴먼?" 짤과 실패 화면 로직 연결
-            alert("시간 초과! 미쳤습니까 휴먼?"); 
+            showFail();
             return;
         }
-        
         timeLeft--;
-        const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-        const seconds = String(timeLeft % 60).padStart(2, '0');
-        timeLeftDisplay.innerText = `${minutes}:${seconds}`;
-        
-        // 시간이 30초 이하로 남으면 빨간색으로 깜빡이게 처리 가능
-        if(timeLeft <= 30) {
-            timeLeftDisplay.classList.add('blink-text');
-        }
+        updateTimerDisplay();
     }, 1000);
 }
 
-// ==========================================
-// [새로 추가할 부분] 7. 미니게임 1단계 로직
-// ==========================================
+function updateTimerDisplay() {
+    const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+    const s = String(timeLeft % 60).padStart(2, '0');
+    timeLeftDisplay.innerText = `${m}:${s}`;
+}
+
+// --- 3. [1단계] 신호등 기억력 (0.5초) ---
 const trafficGrid = document.getElementById('traffic-grid');
-let game1Active = false;
-let correctCount = 0;
+let game1Active = false, correctCount = 0;
 
 function initGame1() {
-    trafficGrid.innerHTML = ''; // 초기화
+    trafficGrid.innerHTML = '';
     correctCount = 0;
     game1Active = false;
-
-    // 진짜 신호등(🚦) 4개, 가짜 신호등(🛑) 5개 배열 만들기
-    let cards = ['🚦', '🚦', '🚦', '🚦', '🛑', '🛑', '🛑', '🛑', '🛑'];
-    
-    // 배열 섞기 (랜덤 배치)
-    cards.sort(() => Math.random() - 0.5);
-
-    // 카드 생성해서 화면에 뿌리기
-    cards.forEach((emoji, index) => {
-        const cardEl = document.createElement('div');
-        cardEl.classList.add('card');
-        cardEl.innerText = emoji;
-        cardEl.dataset.type = emoji === '🚦' ? 'real' : 'fake';
-        
-        // 카드 클릭 이벤트
-        cardEl.addEventListener('click', () => handleCardClick(cardEl));
-        
-        trafficGrid.appendChild(cardEl);
+    let cards = ['🚦','🚦','🚦','🚦','🛑','🛑','🛑','🛑','🛑'].sort(()=>Math.random()-0.5);
+    cards.forEach(emoji => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerText = emoji;
+        card.onclick = () => {
+            if(!game1Active || card.classList.contains('revealed')) return;
+            if(emoji === '🚦') {
+                card.classList.add('revealed');
+                if(++correctCount === 4) {
+                    game1Active = false;
+                    setTimeout(() => {
+                        document.getElementById('game1-area').classList.add('hidden');
+                        startStage2();
+                    }, 500);
+                }
+            } else {
+                card.classList.add('wrong');
+                timeLeft -= 1; // 오답 시 1초 감점
+                updateTimerDisplay();
+                setTimeout(() => card.classList.remove('wrong'), 180);
+            }
+        };
+        trafficGrid.appendChild(card);
     });
-
-    // 3초 뒤에 카드 뒤집기 (게임 진짜 시작)
     setTimeout(() => {
-        const allCards = document.querySelectorAll('.card');
-        allCards.forEach(card => card.classList.add('hidden-card'));
-        game1Active = true; // 이제부터 클릭 인정!
-    }, 1000);
+        document.querySelectorAll('.card').forEach(c => c.classList.add('hidden-card'));
+        game1Active = true;
+    }, 500); // 0.5초 후 뒤집힘
 }
 
-function handleCardClick(card) {
-    // 3초 대기 중이거나 이미 까본 카드면 무시
-    if (!game1Active || card.classList.contains('revealed')) return;
+// --- 4. [2단계] 화살표 커맨드 (오답 -5초) ---
+const game2Area = document.getElementById('game2-area');
+const arrowContainer = document.getElementById('arrow-container');
+let game2Active = false, currentArrowSeq = [], currentIdx = 0, roundIdx = 0;
+const arrowKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+const arrowMap = {'ArrowUp':'⬆️','ArrowDown':'⬇️','ArrowLeft':'⬅️','ArrowRight':'➡️'};
 
-    if (card.dataset.type === 'real') {
-        // 정답!
-        card.classList.remove('hidden-card');
-        card.classList.add('revealed');
-        correctCount++;
+function startStage2() {
+    game2Area.classList.remove('hidden');
+    roundIdx = 0;
+    game2Active = true;
+    initArrowRound();
+    document.addEventListener('keydown', handleArrowPress);
+}
 
-        // 4개 다 찾았으면 클리어!
-        if (correctCount === 4) {
-            game1Active = false;
-            setTimeout(() => {
-                alert("1단계 클리어! 다음 단계로 넘어갑니다.");
-                // TODO: 1단계 화면 숨기고 2단계 화면 띄우는 로직 들어갈 예정!
-            }, 500);
-        }
-    } else {
-        // 오답! (시간 1초 차감)
-        card.classList.add('wrong');
-        
-        // 1초 차감 페널티!
-        timeLeft -= 1; 
-        updateTimerDisplay(); // 차감된 시간 즉시 화면에 반영 (이 함수는 아래에 추가)
-
-        // 0.3초 뒤에 빨간색/흔들림 효과 제거하고 다시 뒤집기
-        setTimeout(() => {
-            card.classList.remove('wrong');
-        }, 300);
+function initArrowRound() {
+    currentIdx = 0;
+    currentArrowSeq = [];
+    arrowContainer.innerHTML = '';
+    const count = [3, 5, 7][roundIdx];
+    document.getElementById('command-stage-text').innerText = `Round ${roundIdx+1} (${count}개)`;
+    for(let i=0; i<count; i++){
+        const key = arrowKeys[Math.floor(Math.random()*4)];
+        currentArrowSeq.push(key);
+        const el = document.createElement('div');
+        el.className = 'arrow-box';
+        el.id = `arrow-${i}`;
+        el.innerText = arrowMap[key];
+        arrowContainer.appendChild(el);
     }
 }
 
-// 시간에 맞춰 화면 텍스트 바꿔주는 부분을 함수로 분리 (차감 시 즉시 반영하기 위함)
-function updateTimerDisplay() {
-    if (timeLeft < 0) timeLeft = 0; // 마이너스 방지
-    const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-    const seconds = String(timeLeft % 60).padStart(2, '0');
-    timeLeftDisplay.innerText = `${minutes}:${seconds}`;
+function handleArrowPress(e) {
+    if(!game2Active || !arrowKeys.includes(e.key)) return;
+    e.preventDefault();
+    if(e.key === currentArrowSeq[currentIdx]) {
+        document.getElementById(`arrow-${currentIdx}`).classList.add('success');
+        if(++currentIdx === currentArrowSeq.length) {
+            if(++roundIdx < 3) setTimeout(initArrowRound, 400);
+            else {
+                game2Active = false;
+                document.removeEventListener('keydown', handleArrowPress);
+                setTimeout(() => {
+                    game2Area.classList.add('hidden');
+                    startStage3();
+                }, 500);
+            }
+        }
+    } else {
+        timeLeft -= 5; // 오답 시 5초 감점
+        updateTimerDisplay();
+        document.querySelectorAll('.arrow-box').forEach(el => {
+            el.classList.remove('success');
+            el.classList.add('error');
+            setTimeout(() => el.classList.remove('error'), 180);
+        });
+        currentIdx = 0;
+        if(timeLeft <= 0) showFail();
+    }
 }
+
+// --- 5. [3단계] 시력 검사 (대소문자 구분 & 랜덤 독설 & -5초) ---
+const game3Area = document.getElementById('game3-area');
+const captchaInput = document.getElementById('captcha-input');
+const insultMsg = document.getElementById('insult-msg');
+let targetWord = "";
+
+function startStage3() {
+    game3Area.classList.remove('hidden');
+    const hardWords = ["VjCtCa", "PrOgRaM", "LikeLion", "ComPuTer", "SuWonUni", "GraduAte", "HeoJeob"];
+    
+    function generateNewWord() {
+        targetWord = hardWords[Math.floor(Math.random() * hardWords.length)];
+        const displayWord = targetWord.split('').join(' '); 
+        document.getElementById('captcha-text').innerText = displayWord;
+        return targetWord;
+    }
+
+    let currentTarget = generateNewWord();
+    captchaInput.value = "";
+    captchaInput.focus();
+    insultMsg.innerText = "";
+
+    captchaInput.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+            const userInput = captchaInput.value.trim();
+            
+            // 완벽하게 일치할 때만 성공 (대소문자 포함)
+            if (userInput === currentTarget) {
+                showSuccess();
+            } else {
+                // 틀리면 무조건 -5초 & 랜덤 독설
+                timeLeft -= 5;
+                updateTimerDisplay();
+                
+                const insults = ["시각 장애가 있으십니까?", "삣삐세요?", "허접ㅋ"];
+                const randomInsult = insults[Math.floor(Math.random() * insults.length)];
+                insultMsg.innerText = randomInsult;
+                
+                captchaInput.classList.add('error');
+                currentTarget = generateNewWord(); // 새로운 단어
+                captchaInput.value = "";
+                
+                setTimeout(() => {
+                    captchaInput.classList.remove('error');
+                }, 500);
+
+                if (timeLeft <= 0) showFail();
+            }
+        }
+    };
+}
+
+// --- 6. 결과 처리 ---
+function showFail() {
+    clearInterval(timerInterval);
+    gameScreen.classList.add('hidden');
+    document.getElementById('fail-screen').classList.remove('hidden');
+}
+
+function showSuccess() {
+    clearInterval(timerInterval);
+    gameScreen.classList.add('hidden');
+    document.getElementById('success-screen').classList.remove('hidden');
+    document.getElementById('rank-univ').innerText = univInput.value;
+    document.getElementById('rank-name').innerText = nameInput.value;
+    
+    const rec = TOTAL_TIME - timeLeft;
+    const m = Math.floor(rec / 60);
+    const s = rec % 60;
+    document.getElementById('rank-time').innerText = `${m}분 ${s}초`;
+}
+
+// 재시도 버튼 (망치 애니메이션 후 리로드)
+retryBtn.onclick = () => {
+    hammerImg.classList.remove('hidden');
+    hammerImg.classList.add('hammer-ani');
+    setTimeout(() => {
+        location.reload(); 
+    }, 500); 
+};
