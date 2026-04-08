@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교수님! 저 사람 맞아요!!</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=DungGeunMo&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="game-title">시험지를 제한 시간내로 제출하라!</h1>
+        
+        <div class="test-paper-bg">
+            <div class="test-paper">
+                <button id="help-btn" class="help-btn">?</button>
+                
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="univ-input">학교</label>
+                        <input type="text" id="univ-input" placeholder="예: 수원대학교" autocomplete="off">
+                    </div>
+                    <div class="input-group">
+                        <label for="name-input">이름</label>
+                        <input type="text" id="name-input" placeholder="이름을 입력하세요" autocomplete="off">
+                    </div>
+                </div>
+
+                <button id="submit-btn" class="submit-btn">최종 제출하시겠습니까?</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-content">
+            <button id="close-modal" class="close-btn">X</button>
+            <h2>[게임 설명]</h2>
+            <p>이런 시험지 제출 시간이 얼마 안남았어요..!</p>
+            <p>당신의 실력을 증명하고<br>최종 제출에 성공하세요!</p>
+            <ul class="game-rules">
+                <li><span>1단계:</span> 신호등 기억력 테스트</li>
+                <li><span>2단계:</span> 화살표 커맨드 누르기</li>
+                <li><span>3단계:</span> 10초 시력 검사 타이핑</li>
+            </ul>
+            <p class="timer-text">제한 시간: 05:00</p>
+            <p class="luck-text">행운을 빕니다!</p>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
