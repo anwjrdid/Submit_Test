@@ -30,7 +30,33 @@
             </div>
         </div>
     </div>
+    <div id="warning-screen" class="hidden full-screen">
+        <div class="warning-box">
+            <h2 class="blink-text">⚠️ WARNING ⚠️</h2>
+            <p>비정상적인 시험지 제출 패턴이 감지되었습니다.<br>보안 시스템을 가동합니다.</p>
+            <div class="recaptcha-container">
+                <input type="checkbox" id="im-not-robot" class="robot-checkbox">
+                <label for="im-not-robot">로봇이 아닙니다</label>
+                <div class="fake-logo">♻️</div>
+            </div>
+        </div>
+    </div>
 
+    <div id="game-screen" class="hidden full-screen">
+        <div class="game-header">
+            <div class="user-info">[<span id="display-univ"></span>] <span id="display-name"></span>님</div>
+            <div class="timer-box">남은 시간: <span id="time-left">05:00</span></div>
+        </div>
+        
+        <h2 class="game-subtitle">🚨 보안 인증: 당신이 사람인지 증명하십시오 🚨</h2>
+        
+        <div id="game1-area" class="mini-game-area">
+            <h3>1단계: 신호등 이미지를 고르시오</h3>
+            <p class="game-desc">가짜 5개, 진짜 4개. 1초 후 뒤집힙니다!</p>
+            <div class="grid-container" id="traffic-grid">
+                </div>
+        </div>
+    </div>
     <div id="help-modal" class="modal hidden">
         <div class="modal-content">
             <button id="close-modal" class="close-btn">X</button>
@@ -47,6 +73,7 @@
             <p>최종 순위 1등에게는 커피 쿠폰을 드립니다(~4/24)</p>
         </div>
     </div>
+    
 
     <script src="js/script.js"></script>
 </body>

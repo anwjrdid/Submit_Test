@@ -213,3 +213,166 @@ body {
 
 .timer-text { color: #ff4d4d; font-size: 1.5rem; margin-top: 30px; font-weight: bold; }
 .luck-text { font-size: 1.3rem; color: #a8dadc; }
+
+/* 공통 유틸리티 클래스 */
+.hidden { display: none !important; }
+.full-screen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    z-index: 50;
+}
+
+/* 2단계: 경고창 화면 */
+#warning-screen {
+    background: radial-gradient(circle, #3a0000 0%, #000000 100%);
+}
+
+.warning-box {
+    background-color: #ffffff;
+    color: #000;
+    padding: 40px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    border: 3px solid #ff0000;
+}
+
+.blink-text {
+    color: #ff0000;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* 킹받는 리캡챠 박스 */
+.recaptcha-container {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 15px 20px;
+    border-radius: 3px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.robot-checkbox {
+    width: 25px; height: 25px;
+    cursor: pointer;
+}
+
+.recaptcha-container label {
+    font-size: 1.2rem;
+    color: #333;
+    cursor: pointer;
+    margin-left: 10px;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.fake-logo { font-size: 2rem; }
+
+/* 3단계: 메인 게임 화면 헤더 & 타이머 */
+#game-screen {
+    justify-content: flex-start;
+    padding: 20px;
+}
+
+.game-header {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2b2b36;
+    padding: 15px 30px;
+    border: 2px solid #5a5a6e;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.user-info { font-size: 1.3rem; color: #a8dadc; }
+.timer-box { font-size: 1.8rem; color: #ff4d4d; font-weight: bold; }
+
+.game-subtitle {
+    color: #fca311;
+    font-size: 2rem;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 0px #000;
+}
+
+.mini-game-area {
+    background-color: #2b2b36;
+    border: 2px solid #fff;
+    padding: 40px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.game-desc { color: #ccc; margin-bottom: 20px; font-size: 1.2rem; }
+
+/* 1단계: 신호등 게임 스타일 */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 0 auto;
+    width: 300px;
+}
+
+.card {
+    background-color: #5a5a6e;
+    height: 80px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    transition: transform 0.1s, background-color 0.3s;
+    user-select: none;
+}
+
+/* 카드가 뒤집혀서 숨겨진 상태 */
+.card.hidden-card {
+    background-color: #e5e5e5; /* 뒷면은 회색 */
+    color: transparent; /* 이모지 숨김 */
+    text-shadow: none;
+}
+
+/* 정답을 맞춘 상태 */
+.card.revealed {
+    background-color: #4CAF50; /* 초록색 불빛 */
+    color: initial;
+    pointer-events: none; /* 다시 못 누르게 */
+}
+
+/* 틀렸을 때 (흔들림 + 빨간색) */
+.card.wrong {
+    background-color: #ff4d4d;
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
