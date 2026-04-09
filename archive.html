@@ -35,13 +35,43 @@
 
     <script>
         // 실제 운영 시에는 여기서 서버 API를 fetch해서 가져와야 합니다.
-        // 현재는 로직 확인을 위해 가짜 데이터를 사용합니다.
-        const mockData = [
-            { univ: "수원대학교", name: "양채현", time: "1분 15초", asp: "교수님 사랑합니다 A+ 주세요", rawTime: 75 },
-            { univ: "멋사대학교", name: "김코딩", time: "1분 40초", asp: "서버가 너무 느려요 ㅡㅡ", rawTime: 100 },
-            { univ: "해커대학교", name: "이해커", time: "2분 10초", asp: "허접ㅋ", rawTime: 130 },
-            { univ: "서울대학교", name: "박천재", time: "2분 30초", asp: "이게 게임인가", rawTime: 150 }
-        ];
+       // archive.html 내부 스크립트
+const _supabase = supabase.createClient('https://knkfkyzcrggxfzwomjgy.supabase.co', '여기에_똑같은_Key_박기');
+
+async function render(keyword = "") {
+    const list = document.getElementById('full-archive-list');
+    list.innerHTML = '<tr><td colspan="5" style="text-align:center;">로딩 중...</td></tr>';
+
+    let query = _supabase
+        .from('ranking')
+        .select('*')
+        .order('raw_time', { ascending: true });
+
+    // 검색어가 있으면 필터링 추가
+    if (keyword) {
+        query = query.ilike('univ', `%${keyword}%`);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+        list.innerHTML = '<tr><td colspan="5">데이터를 가져오지 못했습니다.</td></tr>';
+        return;
+    }
+
+    list.innerHTML = '';
+    data.forEach((data, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${data.univ}</td>
+            <td>${data.name}</td>
+            <td style="color: #ff4d4d;">${data.clear_time}</td>
+            <td style="color: #a8dadc;">${data.aspiration}</td>
+        `;
+        list.appendChild(tr);
+    });
+}
 
         function render(keyword = "") {
             const list = document.getElementById('full-archive-list');
