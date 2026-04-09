@@ -360,6 +360,14 @@ async function showSuccess() {
     document.getElementById('rank-time').innerText = timeStr;
 
     document.getElementById('aspiration-submit-btn').onclick = async () => {
+        // 🟢 1. 현재 시간 체크 (이벤트 종료 시간 설정)
+        const now = new Date();
+        const deadline = new Date('2026-04-24T23:59:59'); // 4월 24일 23시 59분 59초
+
+        if (now > deadline) {
+            alert("이벤트가 종료되었습니다! 아쉽게도 랭킹 등록은 불가능하지만 기록은 아카이브에서 확인 가능합니다.");
+            return; // 여기서 함수를 종료시켜서 DB 저장을 막음
+        }
         const asp = document.getElementById('aspiration-input').value;
         if (!asp) return alert("포부를 남겨야 진정한 휴먼입니다.");
         const { error } = await _supabase.from('ranking').insert([{ univ: univInput.value, name: nameInput.value, clear_time: timeStr, raw_time: rawTime, aspiration: asp }]);
