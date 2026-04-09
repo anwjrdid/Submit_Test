@@ -224,7 +224,7 @@ let targetWord = "";
 function startStage3() {
     game3Area.classList.remove('hidden');
     // 🟢 스피키 삭제 완료, 채현님 문구 복구
-    const words = ["VJcTCa", "PrOgRaM", "LIkeliOn", "CoMpUTer", "SuWonUni", "GraduAte", "HeoJeob", "PrOgrAmmer", "HelLowORlD","chAtGpt", "StelLliVe","oOtDgoOD", "쪼아요 쪼아요~ 물걸레질 좋아요~", "안녕 반갑다 나는 키 188cm에 몸무게 88kg..."];
+    const words = ["VJcTCa", "PrOgRaM", "LIkeliOn", "CoMpUTer", "SuWonUni", "GraduAte", "HeoJeob", "PrOgrAmmer", "HelLowORlD","chAtGpt", "StelLliVe","oOtDgoOD"];
     function gen() {
         targetWord = words[Math.floor(Math.random() * words.length)];
         const canvas = document.getElementById('captcha-canvas'); const ctx = canvas.getContext('2d');
@@ -365,7 +365,7 @@ async function showSuccess() {
         const deadline = new Date('2026-04-24T23:59:59'); // 4월 24일 23시 59분 59초
 
         if (now > deadline) {
-            alert("이벤트가 종료되었습니다! 아쉽게도 랭킹 등록은 불가능하지만 기록은 아카이브에서 확인 가능합니다.");
+            alert("아쉽게도 이벤트가 종료되었습니다!");
             return; // 여기서 함수를 종료시켜서 DB 저장을 막음
         }
         const asp = document.getElementById('aspiration-input').value;
