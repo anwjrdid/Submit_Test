@@ -13,8 +13,9 @@
         <div class="test-paper-bg">
             <div class="test-paper">
                 <span class="help-hint">버튼 뒤에 설명 있어요! 👉</span>
-                <button id="help-btn" class="help-btn">?</button>
                 <button id="ranking-btn" class="ranking-btn">🏆</button>
+                <button id="help-btn" class="help-btn">?</button>
+                
                 <div class="input-section">
                     <div class="input-group">
                         <label for="univ-input">학교</label>
@@ -75,7 +76,7 @@
             <h3>3단계: 보안 문구 입력</h3>
             <p class="game-desc">대소문자를 정확히 입력하세요! (틀리면 -5초)</p>
             <div class="captcha-box">
-                <p id="captcha-text" class="blurry-text"></p>
+                <canvas id="captcha-canvas" width="350" height="80" class="blurry-text"></canvas>
             </div>
             <input type="text" id="captcha-input" class="game-input" placeholder="문구를 입력하세요" autocomplete="off">
             <p id="insult-msg" class="insult-text"></p>
@@ -94,7 +95,7 @@
         <div id="game4-area" class="mini-game-area hidden" style="position: relative; height: 400px; overflow: hidden;">
             <h3>마지막 단계: 방해 공작 뚫기</h3>
             <p class="game-desc">도망가는 제출 버튼을 5번 클릭하세요!</p>
-            <p id="click-count-text" style="color: #4CAF50;">클릭 횟수: 0 / 5</p>
+            <p id="click-count-text" style="color: #4CAF50; font-size: 1.5rem; margin-bottom: 20px;">클릭 횟수: 0 / 5</p>
             <button id="runaway-btn" class="submit-btn" style="position: absolute; width: 150px; padding: 10px; font-size: 1rem; transition: none;">최종 제출</button>
         </div>
     </div>
@@ -122,7 +123,7 @@
             </div>
 
             <div class="ranking-board">
-                <h3>[ 제출 랭킹 ]</h3>
+                <h3>[ 내 기록 확인 ]</h3>
                 <div id="final-rank-info">
                     <p>학교: <span id="rank-univ"></span></p>
                     <p>이름: <span id="rank-name"></span></p>
@@ -136,21 +137,36 @@
 
     <img src="images/hammer.png" id="hammer-effect" class="hammer-img hidden">
 
+    <div id="ranking-modal" class="modal hidden">
+        <div class="modal-content" style="width: 500px;">
+            <button id="close-ranking-btn" class="close-btn">X</button>
+            <h2 style="color: #fca311;">🏆 명예의 전당 🏆</h2>
+            <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 20px;">4/24 00시까지 명예의 전당 생존자 커피 쿠폰!</p>
+
+            <div id="top3-container" style="background: #1a1a1f; padding: 20px; border-radius: 10px; border: 2px solid #fca311; margin-bottom: 20px;">
+                <ul id="top3-list" style="list-style: none; padding: 0; margin: 0; text-align: left;"></ul>
+            </div>
+
+            <button id="archive-open-btn" class="submit-btn" style="width: 200px; font-size: 1.1rem;">아카이브</button>
+        </div>
+    </div>
+
     <div id="help-modal" class="modal hidden">
         <div class="modal-content">
             <button id="close-modal" class="close-btn">X</button>
             <h2>[게임 설명]</h2>
             <p>이런! 시험지 제출 시간이 얼마 안 남았어요..!</p>
             <ul class="game-rules">
-                <li><span>1단계:</span> 신호등 기억력 테스트 (0.5초)</li>
+                <li><span>1단계:</span> 신호등 기억력 테스트 (-1초)</li>
                 <li><span>2단계:</span> 화살표 커맨드 누르기 (-5초)</li>
                 <li><span>2.5단계:</span> 서버 과부하 버티기 (-10초)</li>
-                <li><span>3단계:</span> 시력 검사 타이핑 (-5초)</li>
+                <li><span>3단계:</span> 보안 문구 타이핑 (-5초)</li>
                 <li><span>3.5단계:</span> 국가 수도 퀴즈 (-10초)</li>
                 <li><span>4단계:</span> 도망가는 버튼 클릭</li>
             </ul>
             <p class="timer-text">제한 시간: 05:00</p>
-            <p class="luck-text">행운을 빕니다!</p>
+            <p class="luck-text">행운을 빕니다!<br>명예의 전당은 선물이 있을지도..?(~4/24)</p>
+
         </div>
     </div>
 

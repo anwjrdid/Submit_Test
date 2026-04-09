@@ -78,29 +78,28 @@ body {
     background-color: #e5e5e5; color: #000;
     border: 2px solid #000; font-weight: bold; font-size: 1.5rem;
     width: 45px; height: 45px; cursor: pointer;
-    box-shadow: 3px 3px 0px #000;
+    box-shadow: 3px 3px 0px #000; transition: background-color 0.2s;
 }
-/* 물음표 버튼 안내 텍스트 */
+.help-btn:hover { background-color: #ccc; }
+
+.ranking-btn {
+    position: absolute; top: 20px; left: 20px;
+    background-color: #e5e5e5; border: 2px solid #000; font-size: 1.5rem;
+    width: 45px; height: 45px; cursor: pointer;
+    box-shadow: 3px 3px 0px #000; transition: background-color 0.2s;
+}
+.ranking-btn:hover { background-color: #fca311; }
+
 .help-hint {
-    position: absolute;
-    top: 32px; 
-    right: 75px; 
-    color: #ff4d4d; /* 회색 대신 경고 느낌의 빨간색으로 하면 눈에 확 띔! (회색이 좋으면 #555 로 변경) */
-    font-size: 1.1rem;
-    font-weight: bold;
-    white-space: nowrap; /* 글자가 두 줄로 쪼개지는 것 방지 */
-    z-index: 10; /* 다른 요소들 위로 확실히 올라오게 */
-    pointer-events: none; 
+    position: absolute; top: 32px; right: 75px; 
+    color: #ff4d4d; font-size: 1.1rem; font-weight: bold;
+    white-space: nowrap; z-index: 10; pointer-events: none; 
     animation: point-right 1s infinite; 
 }
-
-/* 화살표가 찌르는 듯한 애니메이션 */
 @keyframes point-right {
     0%, 100% { transform: translateX(0); }
     50% { transform: translateX(-5px); }
 }
-
-.help-btn:hover { background-color: #ccc; }
 
 .input-section { margin-bottom: 60px; margin-top: 30px; }
 .input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
@@ -187,20 +186,13 @@ body {
 }
 .game-desc { color: #ccc; margin-bottom: 20px; font-size: 1.2rem; }
 
-/* 1단계: 신호등 5x5 최적화 */
+/* 1단계: 신호등 5x5 */
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px; /* 간격 축소 */
-    margin: 0 auto;
-    width: 320px; /* 전체 너비 축소로 화면 넘어가는 것 방지 */
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 0 auto; width: 320px; 
 }
 .card {
-    background-color: #5a5a6e;
-    height: 55px; /* 높이 축소 */
-    border-radius: 8px; display: flex; justify-content: center; align-items: center;
-    font-size: 2rem; /* 이모지 축소 */
-    cursor: pointer; box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    background-color: #5a5a6e; height: 55px; border-radius: 8px; display: flex; justify-content: center; align-items: center;
+    font-size: 2rem; cursor: pointer; box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
     transition: transform 0.1s, background-color 0.3s; user-select: none;
 }
 .card.hidden-card { background-color: #e5e5e5; color: transparent; text-shadow: none; }
@@ -223,8 +215,14 @@ body {
     width: 400px; height: 300px; cursor: none;
 }
 
-/* 3단계: 시력 검사 */
-.blurry-text { font-size: 2.5rem; color: #888; filter: blur(5px); letter-spacing: 5px; user-select: none; font-weight: bold; }
+/* 3단계: 시력 검사 - 이전의 몽환적인 흐림도 복구 */
+.blurry-text { 
+    filter: blur(5px); 
+    user-select: none; 
+    margin-bottom: 20px;
+    /* 캔버스 자체가 커지므로 너비 조절 */
+    max-width: 100%;
+}
 .insult-text { color: #ff4d4d; font-size: 1.1rem; margin-top: 15px; font-weight: bold; min-height: 1.2rem; animation: shake 0.2s; }
 .game-input {
     width: 100%; padding: 15px; font-size: 1.5rem; text-align: center;
@@ -261,18 +259,17 @@ body {
     100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
 }
 
-/* 🏆 랭킹 버튼 (물음표 버튼과 대칭) */
-.ranking-btn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background-color: #e5e5e5;
-    border: 2px solid #000;
-    font-size: 1.5rem;
-    width: 45px;
-    height: 45px;
-    cursor: pointer;
-    box-shadow: 3px 3px 0px #000;
-    transition: background-color 0.2s;
+/* 아카이브 내부 스크롤바 커스텀 */
+#archive-list-scroll::-webkit-scrollbar {
+    width: 8px;
 }
-.ranking-btn:hover { background-color: #fca311; } /* 마우스 올리면 노란색으로 포인트! */
+#archive-list-scroll::-webkit-scrollbar-track {
+    background: #1a1a1f;
+}
+#archive-list-scroll::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+#archive-list-scroll::-webkit-scrollbar-thumb:hover {
+    background: #fca311; /* 마우스 올리면 노란색으로 포인트 */
+}
