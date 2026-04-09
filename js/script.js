@@ -15,16 +15,15 @@ const timeLeftDisplay = document.getElementById('time-left');
 const retryBtn = document.getElementById('retry-btn');
 const hammerImg = document.getElementById('hammer-effect');
 
-// --- 2. 초기 세팅 (3분) ---
+// 타이머 변수
 let timerInterval;
-const TOTAL_TIME = 180; 
+const TOTAL_TIME = 180; // 3분
 let timeLeft = TOTAL_TIME;
 
-// 모달 제어
+// --- 2. 기본 이벤트 세팅 ---
 helpBtn.onclick = () => helpModal.classList.remove('hidden');
 closeModalBtn.onclick = () => helpModal.classList.add('hidden');
 
-// 제출 버튼 -> 경고창
 submitBtn.onclick = () => {
     if (!univInput.value.trim() || !nameInput.value.trim()) {
         alert("학교와 이름을 입력하십시오 휴먼.");
@@ -36,7 +35,6 @@ submitBtn.onclick = () => {
     warningScreen.classList.remove('hidden');
 };
 
-// 로봇 인증 -> 게임 시작
 robotCheckbox.onchange = () => {
     if (robotCheckbox.checked) {
         setTimeout(() => {
@@ -66,7 +64,7 @@ function updateTimerDisplay() {
     timeLeftDisplay.innerText = `${m}:${s}`;
 }
 
-// --- 3. [1단계] 신호등 기억력 (4x4 업그레이드) ---
+// --- 3. [1단계] 신호등 (5x5, 0.5초) ---
 const trafficGrid = document.getElementById('traffic-grid');
 let game1Active = false, correctCount = 0;
 
@@ -75,25 +73,21 @@ function initGame1() {
     correctCount = 0;
     game1Active = false;
 
-    // 4x4니까 총 16개 (진짜 5개, 가짜 11개)
     let cards = [
-        '🚦','🚦','🚦','🚦','🚦', // 진짜 5개
-        '🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑' // 가짜 11개
+        '🚦','🚦','🚦','🚦','🚦','🚦','🚦',
+        '🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑','🛑'
     ].sort(() => Math.random() - 0.5);
 
     cards.forEach(emoji => {
         const card = document.createElement('div');
         card.className = 'card';
-        // 4x4니까 카드가 너무 크면 화면 넘어가니까 높이만 살짝 조절 (필요시)
-        card.style.height = '70px'; 
-        card.innerText = emoji;
+        card.innerText = emoji; // CSS에서 크기를 제어하므로 인라인 스타일 제거
         
         card.onclick = () => {
             if(!game1Active || card.classList.contains('revealed')) return;
             if(emoji === '🚦') {
                 card.classList.add('revealed');
-                // 클리어 조건: 5개
-                if(++correctCount === 5) {
+                if(++correctCount === 7) {
                     game1Active = false;
                     setTimeout(() => {
                         document.getElementById('game1-area').classList.add('hidden');
@@ -110,14 +104,13 @@ function initGame1() {
         trafficGrid.appendChild(card);
     });
 
-    // 0.5초(500ms) 후 뒤집힘
     setTimeout(() => {
         document.querySelectorAll('.card').forEach(c => c.classList.add('hidden-card'));
         game1Active = true;
     }, 500);
 }
 
-// --- 4. [2단계] 화살표 커맨드 ---
+// --- 4. [2단계] 화살표 ---
 const game2Area = document.getElementById('game2-area');
 const arrowContainer = document.getElementById('arrow-container');
 let game2Active = false, currentArrowSeq = [], currentIdx = 0, roundIdx = 0;
@@ -162,7 +155,7 @@ function handleArrowPress(e) {
                 document.removeEventListener('keydown', handleArrowPress);
                 setTimeout(() => {
                     game2Area.classList.add('hidden');
-                    startStage2_5(); // 2.5단계로 연결
+                    startStage2_5(); 
                 }, 500);
             }
         }
@@ -179,7 +172,7 @@ function handleArrowPress(e) {
     }
 }
 
-// --- 5. [2.5단계] 서버 과부하 버티기 ---
+// --- 5. [2.5단계] 탄막 (확률 0.3으로 상향) ---
 let avoidInterval, avoidTimerObj;
 let bullets = [];
 let mouseX = 200, mouseY = 150;
@@ -206,7 +199,7 @@ function startStage2_5() {
         ctx.fillStyle = "#00b4d8";
         ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
 
-        if (Math.random() < 0.3) {
+        if (Math.random() < 0.225) {
             bullets.push({
                 x: Math.random() * canvas.width, y: 0,
                 vx: (Math.random() - 0.5) * 6, vy: Math.random() * 4 + 2
@@ -249,7 +242,7 @@ let targetWord = "";
 
 function startStage3() {
     game3Area.classList.remove('hidden');
-    const hardWords = ["VJcTCa", "PrOgRaM", "LIkeliOn", "CoMpUTer", "SuWonUni", "GraduAte", "HeoJeob", "PrOgrAmmer", "HelLowORlD","chAtGpt", "StelLliVe"];
+    const hardWords = ["VJcTCa", "PrOgRaM", "LIkeliOn", "CoMpUTer", "SuWonUni", "GraduAte", "HeoJeob", "PrOgrAmmer", "HelLowORlD","chAtGpt", "StelLliVe", "안녕 반갑다 나는 키 188cm에 몸무게 88kg...", "스피키 네르지마세요!","쪼아요 쪼아요~ 물걸레질 좋아요~"];
     
     function generateNewWord() {
         targetWord = hardWords[Math.floor(Math.random() * hardWords.length)];
@@ -284,7 +277,7 @@ function startStage3() {
     };
 }
 
-// --- 7. 결과 처리 ---
+// --- 7. 결과 및 재시도 처리 ---
 function showFail() {
     clearInterval(timerInterval);
     if(avoidInterval) clearInterval(avoidInterval);
@@ -308,7 +301,6 @@ function showSuccess() {
     document.getElementById('aspiration-input').focus();
 }
 
-// [핵심] 재시도 버튼 (망치 효과 후 리로드)
 retryBtn.onclick = () => {
     hammerImg.classList.remove('hidden');
     hammerImg.classList.add('hammer-ani');
@@ -317,7 +309,6 @@ retryBtn.onclick = () => {
     }, 500); 
 };
 
-// 포부 등록 버튼 이벤트
 document.getElementById('aspiration-submit-btn').onclick = () => {
     const aspInput = document.getElementById('aspiration-input');
     const rankQuote = document.getElementById('rank-quote');

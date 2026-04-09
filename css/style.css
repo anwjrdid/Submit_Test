@@ -1,11 +1,10 @@
 /* 전체적인 폰트와 배경 설정 */
 * {
     box-sizing: border-box;
-    font-family: 'DungGeunMo', sans-serif; /* 레트로 픽셀 폰트 유지 */
+    font-family: 'DungGeunMo', sans-serif;
 }
 
 body {
-    /* 1. 배경 그라데이션: 겉은 매우 어둡고 중앙으로 밝아지는 Radial Gradient 강화 */
     background: radial-gradient(circle at center, #2A2A3A 0%, #030308 100%);
     color: #fff;
     display: flex;
@@ -20,11 +19,10 @@ body {
     text-align: center;
     position: relative;
     width: 100%;
-    max-width: 800px; /* 컨테이너 크기 크게 유지 */
+    max-width: 800px;
     padding: 20px;
 }
 
-/* 제목 스타일: 그라데이션 텍스트와 그림자로 세련되게 (이전과 동일) */
 .game-title {
     font-size: 3.3rem;
     background: linear-gradient(to bottom, #fca311, #ffde03);
@@ -34,342 +32,186 @@ body {
     margin-bottom: 30px;
 }
 
-/* 2. 진짜 시험지 마냥 꾸미기 */
+/* 시험지 디자인 */
 .test-paper-bg {
-    background-color: transparent; /* 배경색 제거 */
+    background-color: transparent;
     padding: 30px;
-    border-radius: 20px 40px 15px 30px; /* 불규칙한 모서리로 종이 질감 시뮬레이션 */
-    box-shadow: 0px 30px 60px rgba(0, 0, 0, 0.7); /* 깊은 그림자 */
+    border-radius: 20px 40px 15px 30px;
+    box-shadow: 0px 30px 60px rgba(0, 0, 0, 0.7);
     position: relative;
     width: 100%;
     margin: 0 auto;
-    overflow: hidden; /* 구김 효과가 밖으로 나가지 않게 */
+    overflow: hidden;
 }
 
-/* 시험지 내부: 종이 질감 및 구김 */
 .test-paper {
-    background-color: #f5f5ed; /* 미묘한 크림색 종이 배경 */
+    background-color: #f5f5ed;
     background-image:
-        /* 미묘한 종이 질감 패턴 (점) */
         radial-gradient(circle at center, rgba(0,0,0,0.05) 1px, transparent 1px),
-        /* 미묘한 종이 질감 패턴 (선) */
         linear-gradient(45deg, rgba(0,0,0,0.02) 25%, transparent 25%),
         linear-gradient(-45deg, rgba(0,0,0,0.02) 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.02) 75%),
         linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.02) 75%);
     background-size: 10px 10px, 20px 20px, 20px 20px, 20px 20px, 20px 20px;
-    border: 1px solid #c8c8b6; /* 미묘한 테두리 */
-    border-radius: inherit; /* 부모의 불규칙한 모서리 상속 */
-    padding: 60px 40px; /* 크기 크게 유지 */
+    border: 1px solid #c8c8b6;
+    border-radius: inherit;
+    padding: 60px 40px;
     position: relative;
-    box-shadow: inset 0px 0px 50px rgba(0, 0, 0, 0.3); /* 깊이감 */
+    box-shadow: inset 0px 0px 50px rgba(0, 0, 0, 0.3);
 }
 
-/* 구김 효과 시뮬레이션 */
 .test-paper::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
+    top: -50%; left: -50%; width: 200%; height: 200%;
     background-image:
-        /* 미묘한 구김 선 */
         linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.1) 41%, transparent 41%),
         linear-gradient(120deg, transparent 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 46%, transparent 46%);
     background-size: 300px 300px;
     opacity: 0.5;
-    pointer-events: none; /* 클릭 방지 */
+    pointer-events: none;
 }
 
-/* 3. 글자 및 요소는 그대로 유지 (배경색 조정 포함) */
-/* 물음표 버튼 */
+/* 입력 폼 및 버튼 */
 .help-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: #e5e5e5;
-    color: #000;
-    border: 2px solid #000;
-    font-weight: bold;
-    font-size: 1.5rem;
-    width: 45px;
-    height: 45px;
-    cursor: pointer;
+    position: absolute; top: 20px; right: 20px;
+    background-color: #e5e5e5; color: #000;
+    border: 2px solid #000; font-weight: bold; font-size: 1.5rem;
+    width: 45px; height: 45px; cursor: pointer;
     box-shadow: 3px 3px 0px #000;
 }
 .help-btn:hover { background-color: #ccc; }
 
-/* 입력창 디자인 */
-.input-section {
-    margin-bottom: 60px;
-    margin-top: 30px;
-}
-
-.input-group {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-}
-
-.input-group label {
-    font-size: 1.4rem;
-    width: 80px;
-    text-align: left;
-    color: #333; /* 종이 위에서 더 잘 보이게 어둡게 */
-}
-
+.input-section { margin-bottom: 60px; margin-top: 30px; }
+.input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+.input-group label { font-size: 1.4rem; width: 80px; text-align: left; color: #333; }
 .input-group input {
-    width: 75%;
-    padding: 15px;
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid #555; /* 어두운 종이 위에서 더 잘 보이게 어둡게 */
-    color: #000; /* 종이 위에서 더 잘 보이게 검은색 */
-    font-size: 1.3rem;
-    font-family: 'DungGeunMo', sans-serif;
-    outline: none;
+    width: 75%; padding: 15px; background-color: transparent;
+    border: none; border-bottom: 2px solid #555; color: #000;
+    font-size: 1.3rem; font-family: 'DungGeunMo', sans-serif; outline: none;
     transition: border-bottom 0.2s;
 }
-.input-group input:focus {
-    border-bottom: 2px solid #fca311;
-}
+.input-group input:focus { border-bottom: 2px solid #fca311; }
 
-/* 최종 제출 버튼 */
 .submit-btn {
-    background-color: #e5e5e5;
-    color: #000;
-    border: 3px solid #000;
-    padding: 20px 30px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    font-family: 'DungGeunMo', sans-serif;
-    cursor: pointer;
-    box-shadow: 6px 6px 0px #000;
-    transition: all 0.1s;
-    width: 100%;
+    background-color: #e5e5e5; color: #000;
+    border: 3px solid #000; padding: 20px 30px;
+    font-size: 1.5rem; font-weight: bold; font-family: 'DungGeunMo', sans-serif;
+    cursor: pointer; box-shadow: 6px 6px 0px #000;
+    transition: all 0.1s; width: 100%;
 }
-.submit-btn:active {
-    transform: translate(3px, 3px);
-    box-shadow: 3px 3px 0px #000;
-}
+.submit-btn:active { transform: translate(3px, 3px); box-shadow: 3px 3px 0px #000; }
 
-/* 4. 모달 (설명창) 디자인은 그대로 유지 */
+/* 모달창 */
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
+    display: flex; justify-content: center; align-items: center; z-index: 100;
 }
-
-.modal.hidden {
-    display: none;
-}
-
+.modal.hidden { display: none; }
 .modal-content {
-    background-color: #2b2b36;
-    border: 3px solid #fff;
-    padding: 50px;
-    width: 500px;
-    text-align: center;
-    position: relative;
-    box-shadow: 10px 10px 0px #000;
+    background-color: #2b2b36; border: 3px solid #fff; padding: 50px;
+    width: 500px; text-align: center; position: relative; box-shadow: 10px 10px 0px #000;
 }
-
 .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background-color: transparent;
-    color: #ff4d4d;
-    border: 3px solid #ff4d4d;
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
+    position: absolute; top: 15px; right: 15px;
+    background-color: transparent; color: #ff4d4d; border: 3px solid #ff4d4d;
+    font-size: 1.2rem; font-weight: bold; cursor: pointer; width: 40px; height: 40px;
 }
 .close-btn:hover { background-color: #ff4d4d; color: #fff; }
-
 .modal-content h2 { font-size: 2.2rem; margin-bottom: 30px; }
-
-.game-rules {
-    list-style: none;
-    padding: 0;
-    text-align: left;
-    margin: 30px 0;
-    color: #ccc;
-    font-size: 1.2rem;
-    line-height: 2;
-}
+.game-rules { list-style: none; padding: 0; text-align: left; margin: 30px 0; color: #ccc; font-size: 1.2rem; line-height: 2; }
 .game-rules span { color: #fca311; font-weight: bold; }
-
 .timer-text { color: #ff4d4d; font-size: 1.5rem; margin-top: 30px; font-weight: bold; }
 .luck-text { font-size: 1.3rem; color: #a8dadc; }
 
-/* 공통 유틸리티 클래스 */
+/* 공통 유틸 */
 .hidden { display: none !important; }
 .full-screen {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
-    z-index: 50;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    background-color: #000; z-index: 50;
 }
 
-/* 2단계: 경고창 화면 */
-#warning-screen {
-    background: radial-gradient(circle, #3a0000 0%, #000000 100%);
-}
-
+/* 경고창 (로봇인증) */
+#warning-screen { background: radial-gradient(circle, #3a0000 0%, #000000 100%); }
 .warning-box {
-    background-color: #ffffff;
-    color: #000;
-    padding: 40px;
-    border-radius: 5px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
-    border: 3px solid #ff0000;
+    background-color: #ffffff; color: #000; padding: 40px; border-radius: 5px;
+    text-align: center; box-shadow: 0 0 30px rgba(255, 0, 0, 0.5); border: 3px solid #ff0000;
 }
+.blink-text { color: #ff0000; font-size: 3rem; margin-bottom: 20px; animation: blink 1s infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-.blink-text {
-    color: #ff0000;
-    font-size: 3rem;
-    margin-bottom: 20px;
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
-
-/* 킹받는 리캡챠 박스 */
 .recaptcha-container {
-    margin-top: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    padding: 15px 20px;
-    border-radius: 3px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-top: 30px; display: flex; align-items: center; justify-content: space-between;
+    background-color: #f9f9f9; border: 1px solid #ccc; padding: 15px 20px;
+    border-radius: 3px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); width: 300px; margin: 30px auto 0;
 }
-
-.robot-checkbox {
-    width: 25px; height: 25px;
-    cursor: pointer;
-}
-
-.recaptcha-container label {
-    font-size: 1.2rem;
-    color: #333;
-    cursor: pointer;
-    margin-left: 10px;
-    flex-grow: 1;
-    text-align: left;
-}
-
+.robot-checkbox { width: 25px; height: 25px; cursor: pointer; }
+.recaptcha-container label { font-size: 1.2rem; color: #333; cursor: pointer; margin-left: 10px; flex-grow: 1; text-align: left; }
 .fake-logo { font-size: 2rem; }
 
-/* 3단계: 메인 게임 화면 헤더 & 타이머 */
-#game-screen {
-    justify-content: flex-start;
-    padding: 20px;
-}
-
+/* 게임 화면 공통 */
+#game-screen { justify-content: flex-start; padding: 20px; }
 .game-header {
-    width: 100%;
-    max-width: 800px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #2b2b36;
-    padding: 15px 30px;
-    border: 2px solid #5a5a6e;
-    border-radius: 10px;
-    margin-bottom: 30px;
+    width: 100%; max-width: 800px; display: flex; justify-content: space-between;
+    align-items: center; background-color: #2b2b36; padding: 15px 30px;
+    border: 2px solid #5a5a6e; border-radius: 10px; margin-bottom: 30px;
 }
-
 .user-info { font-size: 1.3rem; color: #a8dadc; }
 .timer-box { font-size: 1.8rem; color: #ff4d4d; font-weight: bold; }
-
-.game-subtitle {
-    color: #fca311;
-    font-size: 2rem;
-    margin-bottom: 40px;
-    text-shadow: 2px 2px 0px #000;
-}
-
+.game-subtitle { color: #fca311; font-size: 2rem; margin-bottom: 40px; text-shadow: 2px 2px 0px #000; }
 .mini-game-area {
-    background-color: #2b2b36;
-    border: 2px solid #fff;
-    padding: 40px;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 600px;
-    text-align: center;
+    background-color: #2b2b36; border: 2px solid #fff; padding: 40px;
+    border-radius: 10px; width: 100%; max-width: 600px; text-align: center;
 }
-
 .game-desc { color: #ccc; margin-bottom: 20px; font-size: 1.2rem; }
 
-/* 1단계: 신호등 게임 스타일 */
+/* 1단계: 신호등 5x5 최적화 */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4열로 변경 */
-    gap: 10px; /* 간격을 살짝 좁힘 */
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px; /* 간격 축소 */
     margin: 0 auto;
-    width: 320px; /* 4x4에 적당한 너비 */
+    width: 320px; /* 전체 너비 축소로 화면 넘어가는 것 방지 */
 }
-
 .card {
     background-color: #5a5a6e;
-    height: 80px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2.5rem;
-    cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-    transition: transform 0.1s, background-color 0.3s;
-    user-select: none;
+    height: 55px; /* 높이 축소 */
+    border-radius: 8px; display: flex; justify-content: center; align-items: center;
+    font-size: 2rem; /* 이모지 축소 */
+    cursor: pointer; box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    transition: transform 0.1s, background-color 0.3s; user-select: none;
+}
+.card.hidden-card { background-color: #e5e5e5; color: transparent; text-shadow: none; }
+.card.revealed { background-color: #4CAF50; color: initial; pointer-events: none; }
+.card.wrong { background-color: #ff4d4d; animation: shake 0.3s; }
+
+/* 2단계: 화살표 */
+.arrow-container { display: flex; justify-content: center; gap: 15px; margin: 30px 0; min-height: 70px; }
+.arrow-box {
+    width: 60px; height: 60px; background-color: #5a5a6e; border-radius: 8px;
+    display: flex; justify-content: center; align-items: center; font-size: 2.5rem;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5); transition: all 0.2s;
+}
+.arrow-box.success { background-color: #4CAF50; opacity: 0.3; transform: scale(0.8); }
+.arrow-box.error { background-color: #ff4d4d; animation: shake 0.3s; }
+
+/* 2.5단계: 캔버스 */
+#avoid-canvas-container {
+    background-color: #111; border: 2px solid #ff4d4d; margin: 20px auto;
+    width: 400px; height: 300px; cursor: none;
 }
 
-/* 카드가 뒤집혀서 숨겨진 상태 */
-.card.hidden-card {
-    background-color: #e5e5e5; /* 뒷면은 회색 */
-    color: transparent; /* 이모지 숨김 */
-    text-shadow: none;
+/* 3단계: 시력 검사 */
+.blurry-text { font-size: 2.5rem; color: #888; filter: blur(5px); letter-spacing: 5px; user-select: none; font-weight: bold; }
+.insult-text { color: #ff4d4d; font-size: 1.1rem; margin-top: 15px; font-weight: bold; min-height: 1.2rem; animation: shake 0.2s; }
+.game-input {
+    width: 100%; padding: 15px; font-size: 1.5rem; text-align: center;
+    border: 3px solid #fca311; border-radius: 5px; background-color: #1a1a1f;
+    color: #fff; font-family: 'DungGeunMo', sans-serif;
 }
-
-/* 정답을 맞춘 상태 */
-.card.revealed {
-    background-color: #4CAF50; /* 초록색 불빛 */
-    color: initial;
-    pointer-events: none; /* 다시 못 누르게 */
-}
-
-/* 틀렸을 때 (흔들림 + 빨간색) */
-.card.wrong {
-    background-color: #ff4d4d;
-    animation: shake 0.3s;
-}
+.game-input.error { border-color: #ff4d4d; background-color: #3a0000; }
 
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
@@ -377,128 +219,24 @@ body {
     75% { transform: translateX(5px); }
 }
 
-/* 2단계: 화살표 커맨드 게임 스타일 */
-.arrow-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 30px 0;
-    min-height: 70px; /* 화살표가 없어도 영역 유지 */
+/* 결과창 공통 */
+.human-img { width: 300px; height: auto; margin-bottom: 20px; border: 2px solid #ff0000; }
+.retry-btn {
+    background-color: #ff4d4d; color: #fff; border: none; padding: 20px 40px;
+    font-size: 1.5rem; cursor: pointer; box-shadow: 4px 4px 0px #000; font-family: 'DungGeunMo', sans-serif;
 }
 
-.arrow-box {
-    width: 60px;
-    height: 60px;
-    background-color: #5a5a6e;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2.5rem;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-    transition: all 0.2s;
-}
+.clear-title { font-size: 3rem; color: #4CAF50; animation: blink 0.5s infinite; }
+.aspiration-box { background: #1a1a1f; border: 2px dashed #fca311; padding: 20px; margin: 20px 0; width: 100%; }
+#aspiration-input { width: 100%; padding: 10px; background: #333; border: 1px solid #555; color: #fff; font-family: 'DungGeunMo', sans-serif; text-align: center; }
+.ranking-board { background: #2b2b36; padding: 30px; border: 2px solid #fca311; margin: 20px 0; }
+.ranking-board .quote { margin-top: 15px; font-size: 1.2rem; color: #ffde03; word-break: break-all; border-top: 1px solid #555; padding-top: 10px; }
 
-/* 정답을 맞춘 화살표 */
-.arrow-box.success {
-    background-color: #4CAF50;
-    opacity: 0.3; /* 희미해지면서 맞췄다는 걸 표시 */
-    transform: scale(0.8);
-}
-
-/* 틀렸을 때 빨개지는 효과 */
-.arrow-box.error {
-    background-color: #ff4d4d;
-    animation: shake 0.3s;
-}
-
-/* 3단계: 시력 검사 타이핑 스타일 수정 */
-.blurry-text {
-    font-size: 2.5rem;
-    color: #888; /* 회색으로 변경 */
-    filter: blur(5px);
-    letter-spacing: 5px;
-    user-select: none;
-    font-weight: bold;
-}
-
-/* 킹받는 질문 문구 */
-.insult-text {
-    color: #ff4d4d;
-    font-size: 1.1rem;
-    margin-top: 15px;
-    font-weight: bold;
-    min-height: 1.2rem; /* 문구가 없을 때도 자리 유지 */
-    animation: shake 0.2s; /* 틀릴 때마다 흔들림 */
-}
-
-/* 입력창 틀렸을 때 효과 */
-.game-input.error {
-    border-color: #ff4d4d;
-    background-color: #3a0000;
-}
-
-/* 실패 화면 이미지 */
-.human-img {
-    width: 300px;
-    height: auto;
-    margin-bottom: 20px;
-    border: 2px solid #ff0000;
-}
-
-/* 뿅망치 효과 스타일 */
-.hammer-img {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1.5);
-    z-index: 1000; /* 모든 화면보다 위 */
-    pointer-events: none;
-}
-
-/* 뿅망치 나타날 때 애니메이션 (흔들기) */
-.hammer-ani {
-    animation: hit 0.3s ease-out;
-}
-
+/* 뿅망치 효과 */
+.hammer-img { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.5); z-index: 1000; pointer-events: none; }
+.hammer-ani { animation: hit 0.3s ease-out; }
 @keyframes hit {
     0% { transform: translate(-50%, -100%) rotate(-45deg); opacity: 0; }
     50% { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
-}
-
-#avoid-canvas-container {
-    background-color: #111;
-    border: 2px solid #ff4d4d;
-    margin: 20px auto;
-    width: 400px;
-    height: 300px;
-    cursor: none; /* 마우스 커서를 숨겨서 게임 몰입도 업 */
-}
-
-.aspiration-box {
-    background: #1a1a1f;
-    border: 2px dashed #fca311;
-    padding: 20px;
-    margin: 20px 0;
-    width: 100%;
-}
-
-#aspiration-input {
-    width: 100%;
-    padding: 10px;
-    background: #333;
-    border: 1px solid #555;
-    color: #fff;
-    font-family: 'DungGeunMo', sans-serif;
-    text-align: center;
-}
-
-.ranking-board .quote {
-    margin-top: 15px;
-    font-size: 1.2rem;
-    color: #ffde03;
-    word-break: break-all;
-    border-top: 1px solid #555;
-    padding-top: 10px;
 }
