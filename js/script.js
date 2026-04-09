@@ -206,7 +206,7 @@ function startStage2_5() {
         ctx.fillStyle = "#00b4d8";
         ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
 
-        if (Math.random() < 0.15) {
+        if (Math.random() < 0.3) {
             bullets.push({
                 x: Math.random() * canvas.width, y: 0,
                 vx: (Math.random() - 0.5) * 6, vy: Math.random() * 4 + 2
