@@ -359,21 +359,65 @@ async function showSuccess() {
     document.getElementById('rank-name').innerText = nameInput.value;
     document.getElementById('rank-time').innerText = timeStr;
 
-    document.getElementById('aspiration-submit-btn').onclick = async () => {
-        // 🟢 1. 현재 시간 체크 (이벤트 종료 시간 설정)
-        const now = new Date();
-        const deadline = new Date('2026-04-24T23:59:59'); // 4월 24일 23시 59분 59초
+// --- 성공 화면 저장 로직 (중복 제거 버전) ---
+document.getElementById('aspiration-submit-btn').onclick = async () => {
+    // 1. 시간 제한 체크 (동일)
+    const now = new Date();
+    const deadline = new Date('2026-04-24T23:59:59');
+    if (now > deadline) {
+        alert("아쉽게도 이벤트가 종료되었습니다ㅜㅜ");
+        return;
+    }
 
-        if (now > deadline) {
-            alert("아쉽게도 이벤트가 종료되었습니다!");
-            return; // 여기서 함수를 종료시켜서 DB 저장을 막음
+    const aspInput = document.getElementById('aspiration-input');
+    const univ = univInput.value;
+    const name = nameInput.value;
+    const rawTime = TOTAL_TIME - timeLeft; // 현재 클리어한 시간 (초 단위)
+    const timeStr = document.getElementById('rank-time').innerText;
+
+    if (aspInput.value.trim() === "") {
+        alert("포부를 남겨야 진정한 휴먼입니다");
+        return;
+    }
+
+    // 2. 먼저 기존 기록이 있는지 확인합니다.
+    const { data: existingData } = await _supabase
+        .from('ranking')
+        .select('raw_time')
+        .eq('univ', univ)
+        .eq('name', name)
+        .maybeSingle();
+
+    // 3. 기록 비교 로직
+    if (existingData) {
+        // 기존 기록보다 현재 기록(rawTime)이 더 짧을(작을) 때만 업데이트
+        if (rawTime < existingData.raw_time) {
+            const { error } = await _supabase
+                .from('ranking')
+                .update({ 
+                    clear_time: timeStr, 
+                    raw_time: rawTime, 
+                    aspiration: aspInput.value 
+                })
+                .eq('univ', univ)
+                .eq('name', name);
+            
+            if (!error) alert("축하합니다! 최고 기록이 갱신되었습니다. 🔥");
+        } else {
+            // 기록 경신에 실패한 경우
+            alert("이미 더 좋은 기록이 등록되어 있습니다. 기록 경신 실패! 😜");
         }
-        const asp = document.getElementById('aspiration-input').value;
-        if (!asp) return alert("포부를 남겨야 진정한 휴먼입니다.");
-        const { error } = await _supabase.from('ranking').insert([{ univ: univInput.value, name: nameInput.value, clear_time: timeStr, raw_time: rawTime, aspiration: asp }]);
-        if (error) alert("저장 실패: " + error.message);
-        else { alert("명예의 전당에 등재되었습니다!"); location.reload(); }
-    };
+    } else {
+        // 4. 기존 데이터가 없으면 새로 생성 (insert)
+        const { error } = await _supabase
+            .from('ranking')
+            .insert([{ univ, name, clear_time: timeStr, raw_time: rawTime, aspiration: aspInput.value }]);
+        
+        if (!error) alert("명예의 전당에 처음으로 등재되었습니다! 🎉");
+    }
+
+    location.reload();
+};
 }
 
 retryBtn.onclick = () => { hammerImg.classList.remove('hidden'); hammerImg.classList.add('hammer-ani'); setTimeout(() => location.reload(), 500); };
