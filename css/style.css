@@ -80,6 +80,26 @@ body {
     width: 45px; height: 45px; cursor: pointer;
     box-shadow: 3px 3px 0px #000;
 }
+/* 물음표 버튼 안내 텍스트 */
+.help-hint {
+    position: absolute;
+    top: 32px; 
+    right: 75px; 
+    color: #ff4d4d; /* 회색 대신 경고 느낌의 빨간색으로 하면 눈에 확 띔! (회색이 좋으면 #555 로 변경) */
+    font-size: 1.1rem;
+    font-weight: bold;
+    white-space: nowrap; /* 글자가 두 줄로 쪼개지는 것 방지 */
+    z-index: 10; /* 다른 요소들 위로 확실히 올라오게 */
+    pointer-events: none; 
+    animation: point-right 1s infinite; 
+}
+
+/* 화살표가 찌르는 듯한 애니메이션 */
+@keyframes point-right {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-5px); }
+}
+
 .help-btn:hover { background-color: #ccc; }
 
 .input-section { margin-bottom: 60px; margin-top: 30px; }
@@ -240,3 +260,19 @@ body {
     50% { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
 }
+
+/* 🏆 랭킹 버튼 (물음표 버튼과 대칭) */
+.ranking-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #e5e5e5;
+    border: 2px solid #000;
+    font-size: 1.5rem;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0px #000;
+    transition: background-color 0.2s;
+}
+.ranking-btn:hover { background-color: #fca311; } /* 마우스 올리면 노란색으로 포인트! */

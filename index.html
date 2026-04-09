@@ -12,7 +12,9 @@
         <h1 class="game-title">시험지를 제한 시간내로 제출하라!</h1>
         <div class="test-paper-bg">
             <div class="test-paper">
+                <span class="help-hint">버튼 뒤에 설명 있어요! 👉</span>
                 <button id="help-btn" class="help-btn">?</button>
+                <button id="ranking-btn" class="ranking-btn">🏆</button>
                 <div class="input-section">
                     <div class="input-group">
                         <label for="univ-input">학교</label>
@@ -43,7 +45,7 @@
     <div id="game-screen" class="hidden full-screen">
         <div class="game-header">
             <div class="user-info">[<span id="display-univ"></span>] <span id="display-name"></span>님</div>
-            <div class="timer-box">남은 시간: <span id="time-left">03:00</span></div>
+            <div class="timer-box">남은 시간: <span id="time-left">05:00</span></div>
         </div>
         <h2 class="game-subtitle">🚨 보안 인증: 당신이 사람인지 증명하십시오 🚨</h2>
         
@@ -55,14 +57,14 @@
 
         <div id="game2-area" class="mini-game-area hidden">
             <h3>2단계: 화살표 커맨드 입력</h3>
-            <p class="game-desc">키보드 방향키를 순서대로 입력하세요! (틀리면 -5초)</p>
+            <p class="game-desc">방향키를 순서대로 입력하세요! (틀리면 -5초)</p>
             <p id="command-stage-text" style="color: #fca311; font-size: 1.2rem; margin-bottom: 10px;">Round 1 (3개)</p>
             <div id="arrow-container" class="arrow-container"></div>
         </div>
 
         <div id="game2-5-area" class="mini-game-area hidden">
             <h3>2.5단계: 서버 과부하 버티기</h3>
-            <p class="game-desc">날아오는 에러(빨간 공)를 15초간 피하세요! (맞으면 -10초)</p>
+            <p class="game-desc">에러를 15초간 피하세요! (맞으면 -10초)</p>
             <div id="avoid-canvas-container">
                 <canvas id="avoid-canvas" width="400" height="300"></canvas>
             </div>
@@ -70,13 +72,30 @@
         </div>
 
         <div id="game3-area" class="mini-game-area hidden">
-            <h3>마지막 단계: 보안 문구 입력</h3>
+            <h3>3단계: 보안 문구 입력</h3>
             <p class="game-desc">대소문자를 정확히 입력하세요! (틀리면 -5초)</p>
             <div class="captcha-box">
                 <p id="captcha-text" class="blurry-text"></p>
             </div>
             <input type="text" id="captcha-input" class="game-input" placeholder="문구를 입력하세요" autocomplete="off">
             <p id="insult-msg" class="insult-text"></p>
+        </div>
+
+        <div id="game3-5-area" class="mini-game-area hidden">
+            <h3>3.5단계: 상식 퀴즈 (나라별 수도)</h3>
+            <p class="game-desc">3문제를 맞추십시오. (틀리면 -10초)</p>
+            <div class="quiz-box">
+                <p id="quiz-question" style="font-size: 1.8rem; color: #fca311; margin-bottom: 20px;"></p>
+            </div>
+            <input type="text" id="quiz-input" class="game-input" placeholder="수도를 입력하세요" autocomplete="off">
+            <p id="quiz-msg" class="insult-text"></p>
+        </div>
+
+        <div id="game4-area" class="mini-game-area hidden" style="position: relative; height: 400px; overflow: hidden;">
+            <h3>마지막 단계: 방해 공작 뚫기</h3>
+            <p class="game-desc">도망가는 제출 버튼을 5번 클릭하세요!</p>
+            <p id="click-count-text" style="color: #4CAF50;">클릭 횟수: 0 / 5</p>
+            <button id="runaway-btn" class="submit-btn" style="position: absolute; width: 150px; padding: 10px; font-size: 1rem; transition: none;">최종 제출</button>
         </div>
     </div>
 
@@ -127,10 +146,11 @@
                 <li><span>2단계:</span> 화살표 커맨드 누르기 (-5초)</li>
                 <li><span>2.5단계:</span> 서버 과부하 버티기 (-10초)</li>
                 <li><span>3단계:</span> 시력 검사 타이핑 (-5초)</li>
+                <li><span>3.5단계:</span> 국가 수도 퀴즈 (-10초)</li>
+                <li><span>4단계:</span> 도망가는 버튼 클릭</li>
             </ul>
-            <p class="timer-text">제한 시간: 03:00</p>
+            <p class="timer-text">제한 시간: 05:00</p>
             <p class="luck-text">행운을 빕니다!</p>
-            <p>최종 순위 1등에게는 커피 쿠폰을 드립니다(~4/24)</p>
         </div>
     </div>
 
