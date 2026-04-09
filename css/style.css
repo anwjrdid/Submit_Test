@@ -331,10 +331,10 @@ body {
 /* 1단계: 신호등 게임 스타일 */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(4, 1fr); /* 4열로 변경 */
+    gap: 10px; /* 간격을 살짝 좁힘 */
     margin: 0 auto;
-    width: 300px;
+    width: 320px; /* 4x4에 적당한 너비 */
 }
 
 .card {
@@ -465,4 +465,40 @@ body {
     0% { transform: translate(-50%, -100%) rotate(-45deg); opacity: 0; }
     50% { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+}
+
+#avoid-canvas-container {
+    background-color: #111;
+    border: 2px solid #ff4d4d;
+    margin: 20px auto;
+    width: 400px;
+    height: 300px;
+    cursor: none; /* 마우스 커서를 숨겨서 게임 몰입도 업 */
+}
+
+.aspiration-box {
+    background: #1a1a1f;
+    border: 2px dashed #fca311;
+    padding: 20px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+#aspiration-input {
+    width: 100%;
+    padding: 10px;
+    background: #333;
+    border: 1px solid #555;
+    color: #fff;
+    font-family: 'DungGeunMo', sans-serif;
+    text-align: center;
+}
+
+.ranking-board .quote {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: #ffde03;
+    word-break: break-all;
+    border-top: 1px solid #555;
+    padding-top: 10px;
 }
