@@ -208,7 +208,7 @@ function startStage2_5() {
         
         // 상단 HP 바 (빨간색이 차오르면 탈락)
         ctx.fillStyle = "#333"; ctx.fillRect(10, 10, 380, 10);
-        ctx.fillStyle = "#ff4d4d"; ctx.fillRect(10, 10, (hitCount / 10) * 380, 10);
+        ctx.fillStyle = "#ff4d4d"; ctx.fillRect(10, 10, (hitCount / 15) * 380, 10);
         
         // 내 캐릭터 (파란 사각형)
         ctx.fillStyle = "#00b4d8"; ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
