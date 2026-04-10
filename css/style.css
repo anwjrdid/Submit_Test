@@ -273,3 +273,9 @@ body {
 #archive-list-scroll::-webkit-scrollbar-thumb:hover {
     background: #fca311; /* 마우스 올리면 노란색으로 포인트 */
 }
+
+.black-text{
+    position: absolute; top: 10px; right: 35%;
+    color:black; font-size: 1.1rem; font-weight: bold;
+    white-space: nowrap; z-index: 10; pointer-events: none; 
+}
