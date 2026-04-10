@@ -217,7 +217,7 @@ body {
 
 /* 3단계: 시력 검사 - 이전의 몽환적인 흐림도 복구 */
 .blurry-text { 
-    filter: blur(5px); 
+    filter: blur(4px); 
     user-select: none; 
     margin-bottom: 20px;
     /* 캔버스 자체가 커지므로 너비 조절 */
