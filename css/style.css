@@ -274,8 +274,12 @@ body {
     background: #fca311; /* 마우스 올리면 노란색으로 포인트 */
 }
 
-.black-text{
-    position: absolute; top: 10px; right: 35%;
-    color:black; font-size: 1.1rem; font-weight: bold;
-    white-space: nowrap; z-index: 10; pointer-events: none; 
+/* 기존 .black-text 수정 */
+.black-text {
+    position: static; /* absolute 대신 자연스럽게 배치 */
+    display: block;
+    color: #ff4d4d; /* 검정색 대신 빨간색 추천 */
+    font-size: 1rem;
+    margin-bottom: 10px;
+    text-align: center;
 }

@@ -282,7 +282,7 @@ let targetWord = "";
 function startStage3() {
     game3Area.classList.remove('hidden');
     // 🟢 스피키 삭제 완료, 채현님 문구 복구
-    const words = ["VJcTCa", "PrOgRaM", "LIkeliOn", "CoMpUTer", "SuWonUni", "GraduAte", "HeoJeob", "PrOgrAmmer", "HelLowORlD","chAtGpt", "StelLliVe","oOtDgoOD"];
+    const words = ["VJcTCa", "PrOgRaM", "LIkeliOn", "CoMpUTer", "SuWonUni", "GraduAte", "HeoJeob", "PrOgrAmmer", "HelLowoRLD","chAtGpt", "StelLliVe","oOtDgoOD"];
     function gen() {
         targetWord = words[Math.floor(Math.random() * words.length)];
         const canvas = document.getElementById('captcha-canvas'); const ctx = canvas.getContext('2d');
