@@ -26,8 +26,17 @@ const archiveOpenBtn = document.getElementById('archive-open-btn');
 
 let timerInterval;
 const TOTAL_TIME = 300; 
-let timeLeft = TOTAL_TIME;
 let allRankingData = []; 
+
+// 🔴 [보안 강화] 관리자 도구에서 timeLeft = 300 조작을 방지하기 위해 캡슐화합니다.
+const GameState = (() => {
+    let _timeLeft = TOTAL_TIME;
+    return {
+        getTime: () => _timeLeft,
+        decrease: (val) => { _timeLeft -= val; },
+        reset: () => { _timeLeft = TOTAL_TIME; }
+    };
+})();
 
 // --- 2. 모달 제어 ---
 helpBtn.onclick = () => helpModal.classList.remove('hidden');
@@ -108,14 +117,15 @@ robotCheckbox.onchange = () => {
 function startTimer() {
     if(timerInterval) clearInterval(timerInterval);
     timerInterval = setInterval(() => {
-        if (timeLeft <= 0) { clearInterval(timerInterval); showFail(); return; }
-        timeLeft--; updateTimerDisplay();
+        if (GameState.getTime() <= 0) { clearInterval(timerInterval); showFail(); return; }
+        GameState.decrease(1); updateTimerDisplay();
     }, 1000);
 }
 
 function updateTimerDisplay() {
-    const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-    const s = String(timeLeft % 60).padStart(2, '0');
+    const t = GameState.getTime();
+    const m = String(Math.floor(t / 60)).padStart(2, '0');
+    const s = String(t % 60).padStart(2, '0');
     timeLeftDisplay.innerText = `${m}:${s}`;
 }
 
@@ -140,7 +150,7 @@ function initGame1() {
                     setTimeout(() => { document.getElementById('game1-area').classList.add('hidden'); startStage2(); }, 500);
                 }
             } else {
-                card.classList.add('wrong'); timeLeft -= 1; updateTimerDisplay();
+                card.classList.add('wrong'); GameState.decrease(1); updateTimerDisplay();
                 setTimeout(() => card.classList.remove('wrong'), 180);
             }
         };
@@ -176,9 +186,9 @@ function handleArrowPress(e) {
             else { game2Active = false; document.removeEventListener('keydown', handleArrowPress); setTimeout(() => { game2Area.classList.add('hidden'); startStage2_5(); }, 500); }
         }
     } else {
-        timeLeft -= 5; updateTimerDisplay();
+        GameState.decrease(5); updateTimerDisplay();
         document.querySelectorAll('.arrow-box').forEach(el => { el.classList.remove('success'); el.classList.add('error'); setTimeout(() => el.classList.remove('error'), 180); });
-        currentIdx = 0; if(timeLeft <= 0) showFail();
+        currentIdx = 0; if(GameState.getTime() <= 0) showFail();
     }
 }
 
@@ -243,8 +253,7 @@ function startStage2_5() {
             // 피격 판정
             if (Math.hypot(b.x - mouseX, b.y - mouseY) < (b.r + 5)) {
                 hitCount++; 
-                timeLeft -= 10; 
-                updateTimerDisplay(); 
+                GameState.decrease(10); updateTimerDisplay(); 
                 bullets.splice(i, 1);
                 
                 if (hitCount >= 15) {
@@ -297,7 +306,7 @@ function startStage3() {
     captchaInput.onkeydown = (e) => {
         if (e.key === 'Enter') {
             if (captchaInput.value.trim() === curr) { game3Area.classList.add('hidden'); startStage3_5(); }
-            else { timeLeft -= 5; updateTimerDisplay(); insultMsg.innerText = "시각 장애가 있으십니까?"; curr = gen(); captchaInput.value = ""; if (timeLeft <= 0) showFail(); }
+            else { GameState.decrease(5); updateTimerDisplay(); insultMsg.innerText = "시각 장애가 있으십니까?"; curr = gen(); captchaInput.value = ""; if (GameState.getTime() <= 0) showFail(); }
         }
     };
 }
@@ -315,7 +324,7 @@ function startStage3_5() {
 
     // [난이도 중] 들어는 봤는데 헷갈림
     {q: "베트남의 수도는?", a: "하노이"}, {q: "태국의 수도는?", a: "방콕"}, {q: "러시아의 수도는?", a: "모스크바"},
-    {q: "스페인의 수도는?", a: "마드리드"}, {q: "필리핀의 수도는?", a: "마닐라"}, {q: "이집트의 수도는?", a: "카이로"},
+    {q: "스페인의 수도는?", a: "마드리드"}, {q: "필리핀의 수도는?", a: "마닐라"}, {q: "이집의 수도는?", a: "카이로"},
     {q: "캐나다의 수도는?", a: "오타와"}, {q: "브라질의 수도는?", a: "브라질리아"},
     {q: "오스트레일리아(호주)의 수도는?", a: "캔버라"}, {q: "튀르키예의 수도는?", a: "앙카라"},
 
@@ -330,7 +339,6 @@ function startStage3_5() {
     {q: "모로코의 수도는?", a: "라바트"}
     ];
 
-    // ✅ 리스트를 완전히 섞은 다음 앞에서 5개만 가져옴 (중복 방지)
     let sessionQuiz = quizData.sort(() => Math.random() - 0.5).slice(0, 5);
     let solvedCount = 0;
 
@@ -349,11 +357,16 @@ function startStage3_5() {
         input.value = ""; 
         input.focus();
 
+        // 🔴 [광클 방지] 엔터키를 계속 눌러서 통과되는 버그를 막기 위해 onkeydown을 정교하게 관리합니다.
         input.onkeydown = (e) => {
             if (e.key === 'Enter') {
                 const userAnswer = input.value.trim();
                 const correctAnswers = Array.isArray(qObj.a) ? qObj.a : [qObj.a];
+                
                 if (correctAnswers.includes(userAnswer)) { 
+                    // 정답 즉시 입력을 차단하여 중복 실행 방지
+                    input.onkeydown = null; 
+                    
                     solvedCount++; 
                     msg.innerText = "정답입니다. 상식이 있군요?";
                     msg.style.color = "#4CAF50";
@@ -362,12 +375,11 @@ function startStage3_5() {
                         showQuiz(); 
                     }, 500);
                 } else { 
-                    timeLeft -= 10; 
-                    updateTimerDisplay();
+                    GameState.decrease(10); updateTimerDisplay();
                     msg.innerText = "상식도 없으십니까? 다시 입력하세요.";
                     msg.style.color = "#ff4d4d";
                     input.value = ""; 
-                    if (timeLeft <= 0) showFail();
+                    if (GameState.getTime() <= 0) showFail();
                 }
             }
         };
@@ -385,7 +397,6 @@ function startStage4() {
     clickCount = 0; 
     currentScale = 1.0;
     
-    // ✅ 4단계 진입 시 키보드 입력(엔터, 스페이스바) 원천 차단
     const blockKeys = (e) => {
         if (e.key === ' ' || e.key === 'Enter') {
             e.preventDefault();
@@ -398,7 +409,6 @@ function startStage4() {
     moveBtn();
 
     runawayBtn.onclick = (e) => {
-        // ✅ 마우스 클릭이 아닌 '키보드 엔터' 등으로 발생한 클릭 이벤트 방지
         if (e.pointerType === '' || e.detail === 0) return; 
 
         clickCount++; 
@@ -428,71 +438,64 @@ async function showSuccess() {
     clearInterval(timerInterval);
     gameScreen.classList.add('hidden');
     document.getElementById('success-screen').classList.remove('hidden');
-    const rawTime = TOTAL_TIME - timeLeft;
+    const rawTime = TOTAL_TIME - GameState.getTime();
     const timeStr = `${Math.floor(rawTime / 60)}분 ${rawTime % 60}초`;
     document.getElementById('rank-univ').innerText = univInput.value;
     document.getElementById('rank-name').innerText = nameInput.value;
     document.getElementById('rank-time').innerText = timeStr;
 
-// --- 성공 화면 저장 로직 (중복 제거 버전) ---
-document.getElementById('aspiration-submit-btn').onclick = async () => {
-    // 1. 시간 제한 체크 (동일)
-    const now = new Date();
-    const deadline = new Date('2026-04-24T23:59:59');
-    if (now > deadline) {
-        alert("아쉽게도 이벤트가 종료되었습니다ㅜㅜ");
-        return;
-    }
+    document.getElementById('aspiration-submit-btn').onclick = async () => {
+        const now = new Date();
+        const deadline = new Date('2026-04-24T23:59:59');
+        if (now > deadline) {
+            alert("아쉽게도 이벤트가 종료되었습니다ㅜㅜ");
+            return;
+        }
 
-    const aspInput = document.getElementById('aspiration-input');
-    const univ = univInput.value;
-    const name = nameInput.value;
-    const rawTime = TOTAL_TIME - timeLeft; // 현재 클리어한 시간 (초 단위)
-    const timeStr = document.getElementById('rank-time').innerText;
+        const aspInput = document.getElementById('aspiration-input');
+        const univ = univInput.value;
+        const name = nameInput.value;
+        const currentRawTime = TOTAL_TIME - GameState.getTime();
+        const timeStrDisplay = document.getElementById('rank-time').innerText;
 
-    if (aspInput.value.trim() === "") {
-        alert("포부를 남겨야 진정한 휴먼입니다");
-        return;
-    }
+        if (aspInput.value.trim() === "") {
+            alert("포부를 남겨야 진정한 휴먼입니다");
+            return;
+        }
 
-    // 2. 먼저 기존 기록이 있는지 확인합니다.
-    const { data: existingData } = await _supabase
-        .from('ranking')
-        .select('raw_time')
-        .eq('univ', univ)
-        .eq('name', name)
-        .maybeSingle();
+        const { data: existingData } = await _supabase
+            .from('ranking')
+            .select('raw_time')
+            .eq('univ', univ)
+            .eq('name', name)
+            .maybeSingle();
 
-    // 3. 기록 비교 로직
-    if (existingData) {
-        // 기존 기록보다 현재 기록(rawTime)이 더 짧을(작을) 때만 업데이트
-        if (rawTime < existingData.raw_time) {
+        if (existingData) {
+            if (currentRawTime < existingData.raw_time) {
+                const { error } = await _supabase
+                    .from('ranking')
+                    .update({ 
+                        clear_time: timeStrDisplay, 
+                        raw_time: currentRawTime, 
+                        aspiration: aspInput.value 
+                    })
+                    .eq('univ', univ)
+                    .eq('name', name);
+                
+                if (!error) alert("축하합니다! 최고 기록이 갱신되었습니다. 🔥");
+            } else {
+                alert("이미 더 좋은 기록이 등록되어 있습니다. 기록 경신 실패! 😜");
+            }
+        } else {
             const { error } = await _supabase
                 .from('ranking')
-                .update({ 
-                    clear_time: timeStr, 
-                    raw_time: rawTime, 
-                    aspiration: aspInput.value 
-                })
-                .eq('univ', univ)
-                .eq('name', name);
+                .insert([{ univ, name, clear_time: timeStrDisplay, raw_time: currentRawTime, aspiration: aspInput.value }]);
             
-            if (!error) alert("축하합니다! 최고 기록이 갱신되었습니다. 🔥");
-        } else {
-            // 기록 경신에 실패한 경우
-            alert("이미 더 좋은 기록이 등록되어 있습니다. 기록 경신 실패! 😜");
+            if (!error) alert("명예의 전당에 처음으로 등재되었습니다! 🎉");
         }
-    } else {
-        // 4. 기존 데이터가 없으면 새로 생성 (insert)
-        const { error } = await _supabase
-            .from('ranking')
-            .insert([{ univ, name, clear_time: timeStr, raw_time: rawTime, aspiration: aspInput.value }]);
-        
-        if (!error) alert("명예의 전당에 처음으로 등재되었습니다! 🎉");
-    }
 
-    location.reload();
-};
+        location.reload();
+    };
 }
 
 retryBtn.onclick = () => { hammerImg.classList.remove('hidden'); hammerImg.classList.add('hammer-ani'); setTimeout(() => location.reload(), 500); };
