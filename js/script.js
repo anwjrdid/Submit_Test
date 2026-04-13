@@ -1,6 +1,8 @@
 // --- 1. 초기화 및 Supabase 연결 ---
-// 채현님이 발급받은 진짜 키 적용
 const _supabase = supabase.createClient('https://knkfkyzcrggxfzwomjgy.supabase.co', 'sb_publishable_yl6XC2nGGP0_BK0hhgxfww_MyxK0aOh');
+
+// 🔴 [확인] 채현님의 실제 Workers 주소를 넣어주세요
+const WORKER_URL = 'https://ranking-saver.yangchaehyeon67.workers.dev'; 
 
 const helpBtn = document.getElementById('help-btn');
 const closeModalBtn = document.getElementById('close-modal');
@@ -28,7 +30,7 @@ let timerInterval;
 const TOTAL_TIME = 300; 
 let allRankingData = []; 
 
-// 🔴 [보안 강화] 관리자 도구에서 timeLeft 조작 방지를 위해 캡슐화합니다.
+// 🔴 [보안] 관리자 도구 조작 방지 캡슐화
 const GameState = (() => {
     let _timeLeft = TOTAL_TIME;
     return {
@@ -49,7 +51,7 @@ window.addEventListener('click', (e) => {
     if (e.target === helpModal) helpModal.classList.add('hidden');
 });
 
-// --- 3. 실시간 랭킹 로드 (공석 처리 및 XSS 방어) ---
+// --- 3. 실시간 랭킹 로드 (XSS 방어 완료) ---
 async function loadRankingData() {
     const { data, error } = await _supabase
         .from('ranking')
@@ -63,7 +65,7 @@ async function loadRankingData() {
 }
 
 function renderTop3() {
-    rankingList.innerHTML = ''; // 틀 초기화
+    rankingList.innerHTML = '';
     const colors = ['#ffde03', '#e5e5e5', '#cd7f32'];
 
     for (let i = 0; i < 3; i++) {
@@ -73,7 +75,7 @@ function renderTop3() {
         li.style.borderBottom = i < 2 ? "1px solid #333" : "none";
 
         if (item) {
-            // 🔴 [보안] innerHTML 대신 요소별 생성 및 textContent 사용
+            // 🔴 [보안] textContent를 사용하여 XSS 완벽 방어
             const wrapper = document.createElement('div');
             wrapper.style.display = 'flex';
             wrapper.style.justifyContent = 'space-between';
@@ -167,9 +169,8 @@ function updateTimerDisplay() {
     timeLeftDisplay.textContent = `${m}:${s}`;
 }
 
-// --- 5. 미니 게임 스테이지 (연결 통로 및 문구 유지) ---
+// --- 5. 미니 게임 스테이지 (로직/멘트 유지) ---
 
-// [1단계] 신호등
 const trafficGrid = document.getElementById('traffic-grid');
 let game1Active = false, correctCount = 0;
 function initGame1() {
@@ -197,7 +198,6 @@ function initGame1() {
     setTimeout(() => { document.querySelectorAll('.card').forEach(c => c.classList.add('hidden-card')); game1Active = true; }, 500);
 }
 
-// [2단계] 화살표
 const game2Area = document.getElementById('game2-area');
 const arrowContainer = document.getElementById('arrow-container');
 let game2Active = false, currentArrowSeq = [], currentIdx = 0, roundIdx = 0;
@@ -230,7 +230,6 @@ function handleArrowPress(e) {
     }
 }
 
-// [2.5단계] 탄막 피하기
 let avoidInterval, avoidTimerObj, bullets = [], mouseX = 200, mouseY = 150, avoidTimeLeft = 15, hitCount = 0;
 function startStage2_5() {
     const area = document.getElementById('game2-5-area'); 
@@ -281,7 +280,6 @@ function startStage2_5() {
     }, 1000);
 }
 
-// [3단계] 보안 문구
 const game3Area = document.getElementById('game3-area');
 const captchaInput = document.getElementById('captcha-input');
 const insultMsg = document.getElementById('insult-msg');
@@ -308,7 +306,6 @@ function startStage3() {
     };
 }
 
-// [3.5단계] 수도 퀴즈
 function startStage3_5() {
     const area = document.getElementById('game3-5-area'); area.classList.remove('hidden');
     const quizData = [
@@ -350,7 +347,6 @@ function startStage3_5() {
     showQuiz();
 }
 
-// [4단계] 도망가는 버튼 (무한 클릭 버그 방어 완료)
 const game4Area = document.getElementById('game4-area');
 const runawayBtn = document.getElementById('runaway-btn');
 let clickCount = 0, currentScale = 1.0;
@@ -375,8 +371,9 @@ function moveBtn() {
     runawayBtn.style.left = Math.random() * maxX + "px"; runawayBtn.style.top = (Math.random() * maxY + 80) + "px";
 }
 
-// --- 6. 결과 화면 및 저장 ---
+// --- 6. 결과 화면 및 워커 저장 (갱신 로직 복구 완료) ---
 function showFail() { clearInterval(timerInterval); gameScreen.classList.add('hidden'); document.getElementById('fail-screen').classList.remove('hidden'); }
+
 async function showSuccess() {
     clearInterval(timerInterval);
     gameScreen.classList.add('hidden');
@@ -384,7 +381,6 @@ async function showSuccess() {
     const rawTime = TOTAL_TIME - GameState.getTime();
     const timeStr = `${Math.floor(rawTime / 60)}분 ${rawTime % 60}초`;
     
-    // 🔴 [보안] textContent 사용
     document.getElementById('rank-univ').textContent = univInput.value;
     document.getElementById('rank-name').textContent = nameInput.value;
     document.getElementById('rank-time').textContent = timeStr;
@@ -395,34 +391,51 @@ async function showSuccess() {
         if (now > deadline) return alert("아쉽게도 이벤트가 종료되었습니다ㅜㅜ");
 
         const aspInput = document.getElementById('aspiration-input');
-        const univ = univInput.value;
-        const name = nameInput.value;
-        const currentRawTime = TOTAL_TIME - GameState.getTime();
-        const timeStrDisplay = document.getElementById('rank-time').textContent;
-
         if (aspInput.value.trim() === "") return alert("포부를 남겨야 진정한 휴먼입니다");
 
+        // 🟢 1. 기존 기록 확인 (갱신 여부 판단용)
         const { data: existingData } = await _supabase
             .from('ranking')
             .select('raw_time')
-            .eq('univ', univ)
-            .eq('name', name)
+            .eq('univ', univInput.value)
+            .eq('name', nameInput.value)
             .maybeSingle();
 
-        if (existingData) {
-            if (currentRawTime < existingData.raw_time) {
-                const { error } = await _supabase.from('ranking').update({ 
-                    clear_time: timeStrDisplay, raw_time: currentRawTime, aspiration: aspInput.value 
-                }).eq('univ', univ).eq('name', name);
-                if (!error) alert("축하합니다! 최고 기록이 갱신되었습니다. 🔥");
-            } else { alert("이미 더 좋은 기록이 등록되어 있습니다. 기록 경신 실패! 😜"); }
-        } else {
-            const { error } = await _supabase.from('ranking').insert([{ 
-                univ, name, clear_time: timeStrDisplay, raw_time: currentRawTime, aspiration: aspInput.value 
-            }]);
-            if (!error) alert("명예의 전당에 처음으로 등재되었습니다! 🎉");
+        if (existingData && rawTime >= existingData.raw_time) {
+            return alert("이미 더 좋은 기록이 등록되어 있습니다. 기록 경신 실패! 😜");
         }
-        location.reload();
+
+        // 🟢 2. Workers 서버로 전송
+        const payload = {
+            univ: univInput.value,
+            name: nameInput.value,
+            clear_time: timeStr,
+            raw_time: rawTime,
+            aspiration: aspInput.value
+        };
+
+        try {
+            const response = await fetch(WORKER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                if (existingData) {
+                    alert("축하합니다! 최고 기록이 갱신되었습니다. 🔥");
+                } else {
+                    alert("명예의 전당에 처음으로 등재되었습니다! 🎉");
+                }
+                location.reload();
+            } else {
+                const errData = await response.json();
+                alert(`저장 실패: ${errData.error || "서버 응답 오류"}`);
+            }
+        } catch (err) {
+            console.error("통신 에러:", err);
+            alert("서버와 통신할 수 없습니다.");
+        }
     };
 }
 
